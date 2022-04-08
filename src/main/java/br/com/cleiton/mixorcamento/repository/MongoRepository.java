@@ -41,7 +41,7 @@ public abstract class MongoRepository<T> {
     }
 
     public List<T> findAll() {
-        FindIterable<Object> itens = MongoUtil.carregarCollection(genericType.getSimpleName().toLowerCase()).find();
+        FindIterable<Document> itens = MongoUtil.carregarCollection(genericType.getSimpleName().toLowerCase()).find();
         List<T> dados = new ArrayList<>();
 
         itens.forEach((Consumer)  item ->

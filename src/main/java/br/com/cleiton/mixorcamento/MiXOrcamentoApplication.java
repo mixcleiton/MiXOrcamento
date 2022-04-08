@@ -1,6 +1,7 @@
 package br.com.cleiton.mixorcamento;
 
 import br.com.cleiton.mixorcamento.controller.HomeController;
+import br.com.cleiton.mixorcamento.util.PropertiesUtil;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -27,6 +28,7 @@ public class MiXOrcamentoApplication extends Application {
     }
 
     public static void main(String[] args) {
+        PropertiesUtil.carregarApplicationProperties();
         launch();
     }
 }

@@ -30,7 +30,7 @@
                   </VBox>
                   <VBox prefHeight="227.0" prefWidth="269.0" spacing="1.0">
                      <children>
-                        <Label fx:id="d" prefHeight="25.0" prefWidth="229.0">
+                        <Label fx:id="id" prefHeight="25.0" prefWidth="271.0">
                            <VBox.margin>
                               <Insets left="5.0" />
                            </VBox.margin></Label>
@@ -61,20 +61,20 @@
             </HBox>
             <HBox alignment="TOP_CENTER" layoutX="8.0" layoutY="288.0" prefHeight="57.0" prefWidth="378.0" spacing="10.0">
                <children>
-                  <Button fx:id="salvar" mnemonicParsing="false" prefWidth="63.0" text="Salvar" />
-                  <Button fx:id="atualizar" mnemonicParsing="false" prefWidth="63.0" text="Atualizar" />
-                  <Button fx:id="apagar" mnemonicParsing="false" prefWidth="63.0" text="Apagar" />
-                  <Button fx:id="limpar" mnemonicParsing="false" prefWidth="63.0" text="limpar" />
-                  <Button fx:id="fechar" layoutX="264.0" layoutY="10.0" mnemonicParsing="false" prefWidth="63.0" text="Fechar" />
+                  <Button fx:id="btnSalvar" mnemonicParsing="false" prefWidth="63.0" text="Salvar" />
+                  <Button fx:id="btnAtualizar" mnemonicParsing="false" prefWidth="63.0" text="Atualizar" />
+                  <Button fx:id="btnApagar" mnemonicParsing="false" prefWidth="63.0" text="Apagar" />
+                  <Button fx:id="btnLimpar" mnemonicParsing="false" prefWidth="63.0" text="limpar" />
+                  <Button fx:id="btnFechar" layoutX="264.0" layoutY="10.0" mnemonicParsing="false" prefWidth="63.0" text="Fechar" />
                </children>
             </HBox>
-            <TableView fx:id="Empresa" layoutX="397.0" layoutY="48.0" prefHeight="296.0" prefWidth="483.0">
+            <TableView fx:id="tabela" layoutX="397.0" layoutY="48.0" prefHeight="296.0" prefWidth="483.0">
               <columns>
-                <TableColumn prefWidth="186.0" text="Id" />
-                <TableColumn minWidth="6.0" prefWidth="295.0" text="Cidade" />
+                <TableColumn fx:id="idColumn" prefWidth="186.0" text="Id" />
+                <TableColumn fx:id="empresaColumn" minWidth="6.0" prefWidth="295.0" text="Empresa" />
               </columns>
             </TableView>
-            <TextField fx:id="filtroNome" layoutX="397.0" layoutY="14.0" prefHeight="25.0" prefWidth="305.0" promptText="Digite o Nome da Empresa..." />
+            <TextField fx:id="filtro" layoutX="397.0" layoutY="14.0" prefHeight="25.0" prefWidth="305.0" promptText="Digite o Nome da Empresa..." />
          </children>
       </AnchorPane>
   </content>

@@ -1,74 +1,57 @@
 package br.com.cleiton.mixorcamento.controller;
 
 import br.com.cleiton.mixorcamento.MiXOrcamentoApplication;
-import br.com.cleiton.mixorcamento.exception.ListaCampoObrigatorioException;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
 public abstract class BaseController {
 
-    public static final String TITULO_CAMPOS_OBRIGATORIOS = "Campos Obrigatórios";
-    public static final String ERRO_NO_CAMPOS = "Erro no campos";
-    protected Boolean edicao = Boolean.FALSE;
+    private static final Logger logger = LogManager.getLogger(BaseController.class);
+    protected Boolean modoEditar = Boolean.FALSE;
 
     @FXML
-    protected Button salvar;
+    protected Button btnSalvar;
 
     @FXML
-    protected Button atualizar;
+    protected Button btnAtualizar;
 
     @FXML
-    protected Button apagar;
+    protected Button btnApagar;
 
     @FXML
-    protected Button limpar;
+    protected Button btnLimpar;
 
     @FXML
-    protected Button fechar;
+    protected Button btnFechar;
 
     @FXML
     public void initialize() {
         this.inicializar();
         this.carregarBotaoSalvar();
         this.carregarBotaoFechar();
+        this.carregarBotaoLimpar();
+        this.carregarBotaoEditar();
     }
 
     public abstract void inicializar();
 
-    protected void bloquearEditar() {
-        this.atualizar.setDisable(!this.edicao);
-        this.apagar.setDisable(!this.edicao);
-    }
-
-    protected void habilitarEditar() {
-        this.atualizar.setDisable(this.edicao);
-        this.apagar.setDisable(this.edicao);
+    protected void bloquearEditar(Boolean edicao) {
+        this.btnAtualizar.setDisable(edicao);
+        this.btnApagar.setDisable(edicao);
+        this.btnSalvar.setDisable(!edicao);
     }
 
     protected abstract void salvar();
-
-    protected void mostrarMensagemCamposObrigatorios(ListaCampoObrigatorioException campos) {
-        StringBuilder mensagem = new StringBuilder();
-
-        campos.getCamposObrigatorios().forEach(campo -> {
-            mensagem.append(campo.getMessage());
-            mensagem.append("\n");
-        });
-
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(TITULO_CAMPOS_OBRIGATORIOS);
-        alert.setHeaderText(ERRO_NO_CAMPOS);
-        alert.setContentText(mensagem.toString());
-        alert.showAndWait();
-    }
+    protected abstract void editar();
+    protected abstract void limpar();
+    protected abstract void bloquearCampos(Boolean bloquear);
 
     private void fecharAction(Stage window) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MiXOrcamentoApplication.class.getResource("home-view.fxml"));
@@ -81,24 +64,24 @@ public abstract class BaseController {
     }
 
     private void carregarBotaoFechar() {
-        this.fechar.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                try {
-                    fecharAction((Stage) fechar.getScene().getWindow());
-                } catch (IOException e) {
-
-                }
+        this.btnFechar.setOnAction(event -> {
+            try {
+                fecharAction((Stage) btnFechar.getScene().getWindow());
+            } catch (IOException e) {
+                logger.error(e);
             }
         });
     }
 
+    private void carregarBotaoEditar() {
+        this.btnAtualizar.setOnAction(event -> editar());
+    }
+
+    private void carregarBotaoLimpar() {
+        this.btnLimpar.setOnAction(event -> limpar());
+    }
+
     private void carregarBotaoSalvar() {
-        this.salvar.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                salvar();
-            }
-        });
+        this.btnSalvar.setOnAction(event -> salvar());
     }
 }

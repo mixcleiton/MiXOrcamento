@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class CampoObrigatorioException extends Exception {
 
-    private String nomeCampo;
+    private final String nomeCampo;
 
     public CampoObrigatorioException(String nomeCampo, String mensagem) {
         super(mensagem);

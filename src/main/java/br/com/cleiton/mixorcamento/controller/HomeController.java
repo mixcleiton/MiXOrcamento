@@ -8,11 +8,14 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Getter
 @Setter
 public class HomeController {
 
+    private static final Logger logger = LogManager.getLogger(HomeController.class);
     private CidadeController cidadeController;
     private EmpresaController informacaoEmpresaController;
 
@@ -24,8 +27,6 @@ public class HomeController {
 
     @FXML
     MenuItem menuEmpresa;
-
-    public HomeController() {}
 
     @FXML
     public void initialize() {
@@ -53,15 +54,12 @@ public class HomeController {
     }
 
     private EventHandler<ActionEvent> getEventHandler(IBaseController controller) {
-        return new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                Stage stage = (Stage) menuBar.getScene().getWindow();
-                try {
-                    controller.start(stage);
-                } catch (Exception e) {
-
-                }
+        return e -> {
+            Stage stage = (Stage) menuBar.getScene().getWindow();
+            try {
+                controller.start(stage);
+            } catch (Exception exception) {
+                logger.error("erro ao carregar controller", exception);
             }
         };
     }

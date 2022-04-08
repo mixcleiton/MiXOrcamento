@@ -1,6 +1,5 @@
 package br.com.cleiton.mixorcamento.util;
 
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
@@ -361,13 +360,10 @@ public class MaskUtil {
     }
 
     public static void addTextLimiter(final TextInputControl tf, final int maxLength) {
-        tf.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(final ObservableValue<? extends String> ov, final String oldValue, final String newValue) {
-                if (tf.getText().length() > maxLength) {
-                    String s = tf.getText().substring(0, maxLength);
-                    tf.setText(s);
-                }
+        tf.textProperty().addListener(change -> {
+            if (tf.getText().length() > maxLength) {
+                String s = tf.getText().substring(0, maxLength);
+                tf.setText(s);
             }
         });
     }

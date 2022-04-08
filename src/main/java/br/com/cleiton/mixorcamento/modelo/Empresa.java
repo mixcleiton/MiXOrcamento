@@ -1,17 +1,15 @@
-package br.com.cleiton.mixorcamento.dto;
+package br.com.cleiton.mixorcamento.modelo;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
-public class EmpresaDTO implements BaseDTO {
+@SuperBuilder
+public class Empresa extends BaseModelo {
 
-    private String id;
     private String nome;
     private String cnpj;
     private String cidade;
     private String bairro;
     private String endereco;
-
 }

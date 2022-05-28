@@ -5,15 +5,10 @@ import br.com.cleiton.mixorcamento.modelo.Empresa;
 import org.apache.logging.log4j.util.Strings;
 import org.bson.types.ObjectId;
 
-public class EmpresaMapper {
+public class EmpresaMapper implements BaseMapper<Empresa, EmpresaDTO> {
 
-    private EmpresaMapper () {}
-
-    public static Empresa toModelo (EmpresaDTO dto) {
-
-        if (dto == null) {
-            return null;
-        }
+    @Override
+    public Empresa toModelo (EmpresaDTO dto) {
 
         return Empresa.builder()
                 .bairro(dto.getBairro())
@@ -21,10 +16,10 @@ public class EmpresaMapper {
                 .cidade(dto.getCidade())
                 .endereco(dto.getEndereco())
                 .nome(dto.getNome())
-                .id(criarObjectId(dto.getId())).build();
+                .id(this.criarObjectId(dto.getId())).build();
     }
 
-    private static ObjectId criarObjectId(String id) {
+    private ObjectId criarObjectId(String id) {
 
         ObjectId novoId = new ObjectId();
 
@@ -35,11 +30,8 @@ public class EmpresaMapper {
         return novoId;
     }
 
-    public static EmpresaDTO toDTO (Empresa modelo) {
-
-        if (modelo == null) {
-            return null;
-        }
+    @Override
+    public EmpresaDTO toDTO (Empresa modelo) {
 
         return EmpresaDTO.builder()
                 .bairro(modelo.getBairro())
@@ -49,7 +41,6 @@ public class EmpresaMapper {
                 .endereco(modelo.getEndereco())
                 .nome(modelo.getNome())
                 .build();
-
     }
 
 }

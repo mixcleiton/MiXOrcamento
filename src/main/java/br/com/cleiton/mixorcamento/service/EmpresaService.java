@@ -4,39 +4,23 @@ import br.com.cleiton.mixorcamento.dto.EmpresaDTO;
 import br.com.cleiton.mixorcamento.exception.CampoObrigatorioException;
 import br.com.cleiton.mixorcamento.exception.ListaCampoObrigatorioException;
 import br.com.cleiton.mixorcamento.mapper.EmpresaMapper;
+import br.com.cleiton.mixorcamento.modelo.Empresa;
 import br.com.cleiton.mixorcamento.repository.EmpresaRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class EmpresaService {
-
-    private EmpresaRepository repository;
+public class EmpresaService extends BaseService<Empresa,
+        EmpresaRepository,
+        EmpresaMapper,
+        EmpresaDTO> {
 
     public EmpresaService() {
-        repository = new EmpresaRepository();
+        super(new EmpresaMapper(), new EmpresaRepository());
     }
 
-    public void salvar(EmpresaDTO dto, Boolean editar) throws ListaCampoObrigatorioException {
-        this.validarEmpresaDTO(dto);
-
-        if (editar != null && editar) {
-            repository.atualizar(EmpresaMapper.toModelo(dto));
-        } else {
-            repository.inserir(EmpresaMapper.toModelo(dto));
-        }
-    }
-
-    public List<EmpresaDTO> findAll() {
-        return
-            repository.findAll()
-                    .stream()
-                    .map(EmpresaMapper::toDTO)
-                    .collect(Collectors.toList());
-    }
-
-    private void validarEmpresaDTO (EmpresaDTO dto) throws ListaCampoObrigatorioException {
+    @Override
+    public void validarDTO (EmpresaDTO dto) throws ListaCampoObrigatorioException {
 
         List<CampoObrigatorioException> camposObrigatorio = new ArrayList<>();
 

@@ -2,32 +2,32 @@ package br.com.cleiton.mixorcamento.controller;
 
 import br.com.cleiton.mixorcamento.MiXOrcamentoApplication;
 import br.com.cleiton.mixorcamento.dto.EmpresaDTO;
-import br.com.cleiton.mixorcamento.exception.ListaCampoObrigatorioException;
 import br.com.cleiton.mixorcamento.service.EmpresaService;
 import br.com.cleiton.mixorcamento.util.MaskUtil;
-import br.com.cleiton.mixorcamento.util.MensagemUtil;
-import javafx.collections.FXCollections;
+import dev.morphia.query.FindOptions;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.util.Strings;
 
 import java.io.IOException;
-import java.util.List;
 
-public class EmpresaController extends BaseController implements IBaseController {
+public class EmpresaController extends CrudController<EmpresaDTO>
+        implements IBaseController {
 
     private static final Logger logger = LogManager.getLogger(EmpresaController.class);
     public static final int CNPJ_LENGTH = 18;
     public static final int MAX_LENGTH_100 = 100;
     public static final int MAX_LENGTH_255 = 255;
     public static final String MENSAGEM_SUCESSO_EMPRESA = "Dados da Empresa salvo com sucesso";
+    public static final String MENSAGEM_SUCESSO_APAGAR_EMPRESA = "Dados da Empresa apagados com sucesso";
+    public static final String MENSAGEM_PERGUNTA_APAGAR = "Realmente gostaria de apagar os dados da empresa?";
 
     @FXML
     private Label id;
@@ -51,16 +51,14 @@ public class EmpresaController extends BaseController implements IBaseController
     private TextArea endereco;
 
     @FXML
-    private TableView<EmpresaDTO> tabela;
-
-    @FXML
     private TableColumn<TableView<EmpresaDTO>, String> idColumn;
 
     @FXML
     private TableColumn<TableView<EmpresaDTO>, String> empresaColumn;
 
-    private EmpresaService service = new EmpresaService();
-
+    public EmpresaController() {
+        super(new EmpresaService());
+    }
 
     @Override
     public void start(Stage window) throws IOException {
@@ -72,12 +70,14 @@ public class EmpresaController extends BaseController implements IBaseController
     }
 
     public void inicializar() {
+        this.logger.debug("Inicializando EmpresaController");
         this.carregarCampoCNPJ();
         this.carregarLimiteCampos();
         this.bloquearEditar(Boolean.TRUE);
         this.inicializarColunas();
         this.carregarDados();
         this.carregarEventoTabela();
+        this.buscarFiltrado();
     }
 
     private void inicializarColunas() {
@@ -85,39 +85,14 @@ public class EmpresaController extends BaseController implements IBaseController
         empresaColumn.setCellValueFactory(new PropertyValueFactory<>("nome"));
     }
 
-    private void carregarDados() {
-        List<EmpresaDTO> empresas = this.service.findAll();
-        this.carregarTabela(empresas);
+    @Override
+    public String carregarMensagemEditar(EmpresaDTO item) {
+        return
+                "Deseja realmente editar o Registro Empresa: ".concat(item.getId());
     }
 
-    private void carregarTabela(List<EmpresaDTO> empresas) {
-        this.tabela.setItems(FXCollections.observableList(empresas));
-    }
-
-    private void carregarEventoTabela() {
-        this.tabela.setRowFactory( tv -> {
-            TableRow<EmpresaDTO> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY
-                        && event.getClickCount() == 2) {
-                    carregarEditar(row.getItem());
-                }
-            });
-
-            return row;
-        });
-    }
-
-    private void carregarEditar(EmpresaDTO empresa) {
-        StringBuilder mensagem = new StringBuilder("Deseja realmente editar o Registro Empresa: ");
-        mensagem.append(empresa.getNome());
-
-        if (Boolean.TRUE.equals(MensagemUtil.mostrarMensagemPergunta(mensagem.toString()))) {
-            this.carregarCamposNoEditar(empresa);
-        }
-    }
-
-    private void carregarCamposNoEditar(EmpresaDTO empresa) {
+    @Override
+    public void carregarCamposNoEditar(EmpresaDTO empresa) {
         this.id.setText(empresa.getId());
         this.bairro.setText(empresa.getBairro());
         this.cidade.setText(empresa.getCidade());
@@ -141,25 +116,18 @@ public class EmpresaController extends BaseController implements IBaseController
     }
 
     @Override
-    protected void editar() {
-        this.modoEditar = Boolean.TRUE;
-        this.bloquearEditar(Boolean.TRUE);
-        this.bloquearCampos(Boolean.FALSE);
+    public String getMensagemSucessoSalvar() {
+        return MENSAGEM_SUCESSO_EMPRESA;
     }
 
     @Override
-    protected void salvar() {
-        try {
-            this.service.salvar(this.carregarDTO(), modoEditar);
-            this.limpar();
-            this.carregarDados();
-            this.modoEditar = Boolean.FALSE;
-            MensagemUtil.mostrarMensagemSucesso(MENSAGEM_SUCESSO_EMPRESA);
-        } catch (ListaCampoObrigatorioException e) {
-            MensagemUtil.mostrarMensagemCamposObrigatorios(e);
-        } catch (Exception e) {
-            logger.error(e);
-        }
+    public String getMensagemSucessoApagar() {
+        return MENSAGEM_SUCESSO_APAGAR_EMPRESA;
+    }
+
+    @Override
+    public String getMensagemPerguntaApagar() {
+        return MENSAGEM_PERGUNTA_APAGAR;
     }
 
     @Override
@@ -185,19 +153,39 @@ public class EmpresaController extends BaseController implements IBaseController
     }
 
 
-    private EmpresaDTO carregarDTO() {
-        EmpresaDTO.EmpresaDTOBuilder builder = EmpresaDTO.builder()
+    @Override
+    public EmpresaDTO carregarDTO() {
+        return EmpresaDTO.builder()
                 .bairro(bairro.getText())
                 .cidade(cidade.getText())
                 .cnpj(cnpj.getText())
                 .nome(nome.getText())
-                .endereco(endereco.getText());
+                .id(this.getIdValidado(id.getText()))
+                .endereco(endereco.getText())
+                .build();
+    }
 
-        if (!id.getText().isEmpty()) {
-            builder = builder.id(id.getText());
+    private String getIdValidado(String texto) {
+        String idValidado = texto;
+
+        if (Strings.isEmpty(texto)) {
+            idValidado = null;
         }
 
-        return builder.build();
+        return idValidado;
+    }
+
+    public void buscarFiltrado() {
+        this.filtro.setOnKeyReleased(e -> {
+            if (this.filtro.getText().length() >= 3) {
+                logger.info("realizando filtro de busca");
+                FindOptions options = new FindOptions()
+                        .projection()
+                        .include("nome")
+                        .hint("/".concat(this.filtro.getText()).concat("/"));
+                this.carregarTabela(this.service.buscarFiltrado(options));
+            }
+        });
     }
 
 }

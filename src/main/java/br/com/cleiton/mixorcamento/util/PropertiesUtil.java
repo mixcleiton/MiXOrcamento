@@ -27,12 +27,14 @@ public class PropertiesUtil {
 
             prop.load(input);
 
-            logger.info(prop.getProperty(PropertiesEnum.MONGO_URL.getPropertie()));
-
         } catch (IOException e) {
             logger.error(MENSAGEM_ERRO, e);
         }
 
+    }
+
+    public static String getValor(PropertiesEnum propertiesEnum) {
+        return prop.getProperty(propertiesEnum.getPropertie());
     }
 
 }

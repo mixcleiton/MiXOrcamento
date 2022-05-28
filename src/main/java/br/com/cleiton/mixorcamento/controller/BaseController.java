@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bson.types.ObjectId;
 
 import java.io.IOException;
 
@@ -15,6 +16,8 @@ public abstract class BaseController {
 
     private static final Logger logger = LogManager.getLogger(BaseController.class);
     protected Boolean modoEditar = Boolean.FALSE;
+
+    protected ObjectId id;
 
     @FXML
     protected Button btnSalvar;
@@ -38,6 +41,7 @@ public abstract class BaseController {
         this.carregarBotaoFechar();
         this.carregarBotaoLimpar();
         this.carregarBotaoEditar();
+        this.carregarBotaoApagar();
     }
 
     public abstract void inicializar();
@@ -51,6 +55,7 @@ public abstract class BaseController {
     protected abstract void salvar();
     protected abstract void editar();
     protected abstract void limpar();
+    protected abstract void apagar();
     protected abstract void bloquearCampos(Boolean bloquear);
 
     private void fecharAction(Stage window) throws IOException {
@@ -83,5 +88,9 @@ public abstract class BaseController {
 
     private void carregarBotaoSalvar() {
         this.btnSalvar.setOnAction(event -> salvar());
+    }
+
+    private void carregarBotaoApagar() {
+        this.btnApagar.setOnAction(event -> apagar());
     }
 }

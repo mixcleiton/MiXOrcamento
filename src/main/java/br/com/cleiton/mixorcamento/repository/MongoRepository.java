@@ -1,18 +1,16 @@
 package br.com.cleiton.mixorcamento.repository;
 
-import br.com.cleiton.mixorcamento.modelo.BaseModelo;
 import br.com.cleiton.mixorcamento.util.MongoUtil;
-import com.google.gson.Gson;
-import com.mongodb.client.FindIterable;
+import dev.morphia.query.FindOptions;
+import dev.morphia.query.Query;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public abstract class MongoRepository<T> {
     private static final Logger logger = LogManager.getLogger(MongoRepository.class);
@@ -25,37 +23,33 @@ public abstract class MongoRepository<T> {
 
     public void inserir(T document) {
         logger.info("Chamando o método inserir, document: {}", document);
-        Document documento = Document.parse(new Gson().toJson(document));
-        MongoUtil.carregarCollection(genericType.getSimpleName().toLowerCase())
-                .insertOne(documento);
+        MongoUtil.criarConexao().insert(document);
     }
 
-    public void atualizar(T document) {
-        Document documento = Document.parse(new Gson().toJson(document));
-        MongoUtil.carregarCollection(genericType.getSimpleName().toLowerCase())
-                .updateOne( this.getId(document), documento);
+    public void atualizar(T documento) {
+        MongoUtil.criarConexao().merge(documento);
     }
 
-    private Document getId(T document) {
-        return new Document().append("_id", new ObjectId(String.valueOf(((BaseModelo) document).getId())));
+    private Document getId(String id) {
+        return new Document().append("_id", new ObjectId(id));
     }
 
     public List<T> findAll() {
-        FindIterable<Document> itens = MongoUtil.carregarCollection(genericType.getSimpleName().toLowerCase()).find();
-        List<T> dados = new ArrayList<>();
+        Query<T> itens = MongoUtil
+                .criarConexao()
+                .find(genericType);
 
-        itens.forEach((Consumer)  item ->
-            dados.add(
-                    new Gson().fromJson(
-                            ((Document) item).toJson(), genericType))
-        );
-
-        return dados;
+        return itens.stream().collect(Collectors.toList());
     }
 
     public void deletar(T document) {
-        Document documento = Document.parse(new Gson().toJson(document));
-        MongoUtil.carregarCollection(genericType.getSimpleName().toLowerCase())
-                .deleteOne(documento);
+        MongoUtil.criarConexao().delete(document);
+    }
+
+    public List<T> buscarFiltrado(FindOptions filtros) {
+        return MongoUtil.criarConexao()
+                .find(genericType)
+                .iterator(filtros)
+                .toList();
     }
 }

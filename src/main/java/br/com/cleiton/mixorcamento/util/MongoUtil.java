@@ -3,49 +3,39 @@ package br.com.cleiton.mixorcamento.util;
 import br.com.cleiton.mixorcamento.enums.PropertiesEnum;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import dev.morphia.Datastore;
+import dev.morphia.Morphia;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bson.Document;
 
 public class MongoUtil {
     private static final Logger logger = LogManager.getLogger(MongoUtil.class);
-    private static MongoClient mongoClient;
-    private static MongoDatabase mongoDatabase;
 
     private MongoUtil() {}
+    private static Datastore datastore;
 
     public static MongoClient carregarConexao() {
-        logger.debug("Carregando conexão");
+        logger.debug("Carregando conexão do mongo");
 
         return
-                MongoClients.create(PropertiesUtil.prop.getProperty(PropertiesEnum.MONGO_URL.getPropertie()));
+                MongoClients.create(PropertiesUtil.getValor(PropertiesEnum.MONGO_URL));
     }
 
-    public static MongoDatabase carregarDatabase(String database) {
-        validarConexao();
-        return mongoClient.getDatabase(database);
+    public static Datastore criarMorphiaDataStore() {
+
+        return Morphia.createDatastore(carregarConexao(), PropertiesUtil.getValor(PropertiesEnum.MONGO_DATABASE));
     }
 
-    public static MongoCollection<Document> carregarCollection(String collection) {
-        validarDatabase();
+    public static Datastore criarConexao() {
 
-        return mongoDatabase.getCollection(collection);
-    }
-
-    private static void validarDatabase() {
-        String database = PropertiesUtil.prop.getProperty(PropertiesEnum.MONGO_DATABASE.getPropertie());
-        if (mongoDatabase == null) {
-            mongoDatabase = carregarDatabase(database);
+        if (datastore == null) {
+            datastore = criarMorphiaDataStore();
+            datastore.getMapper()
+                    .mapPackage(PropertiesUtil.getValor(PropertiesEnum.MONGO_PACKAGES_MODELOS));
+            datastore.ensureIndexes();
         }
-    }
 
-    private static void validarConexao() {
-        if (mongoClient == null) {
-            mongoClient = carregarConexao();
-        }
+        return datastore;
     }
-
 
 }

@@ -4,17 +4,23 @@ import br.com.cleiton.mixorcamento.MiXOrcamentoApplication;
 import br.com.cleiton.mixorcamento.dto.EmpresaDTO;
 import br.com.cleiton.mixorcamento.service.EmpresaService;
 import br.com.cleiton.mixorcamento.util.MaskUtil;
-import dev.morphia.query.FindOptions;
+import br.com.cleiton.mixorcamento.util.RegexUtil;
+import dev.morphia.query.experimental.filters.Filter;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -179,13 +185,23 @@ public class EmpresaController extends CrudController<EmpresaDTO>
         this.filtro.setOnKeyReleased(e -> {
             if (this.filtro.getText().length() >= 3) {
                 logger.info("realizando filtro de busca");
-                FindOptions options = new FindOptions()
-                        .projection()
-                        .include("nome")
-                        .hint("/".concat(this.filtro.getText()).concat("/"));
-                this.carregarTabela(this.service.buscarFiltrado(options));
+
+                Filter filtro = getFiltroLikePorNome();
+
+                this.carregarTabela(this.service.buscarFiltrado(filtro));
+            } else if (this.filtro.getText().isEmpty()) {
+                this.carregarTabela(this.service.findAll());
             }
         });
+    }
+
+    @NotNull
+    private Filter getFiltroLikePorNome() {
+        return RegexUtil.getInstancia()
+                .getFiltroLike(
+                        "nome",
+                        this.filtro.getText()
+                );
     }
 
 }

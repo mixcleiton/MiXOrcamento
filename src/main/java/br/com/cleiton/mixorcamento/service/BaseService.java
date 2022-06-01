@@ -5,6 +5,7 @@ import br.com.cleiton.mixorcamento.exception.ListaCampoObrigatorioException;
 import br.com.cleiton.mixorcamento.mapper.BaseMapper;
 import br.com.cleiton.mixorcamento.repository.MongoRepository;
 import dev.morphia.query.FindOptions;
+import dev.morphia.query.experimental.filters.Filter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,8 +47,15 @@ public abstract class BaseService<T,
         this.repository.deletar(this.mapper.toModelo(dto));
     }
 
-    public List<D> buscarFiltrado(FindOptions filtros) {
-        return (List<D>) this.repository.buscarFiltrado(filtros)
+    public List<D> buscarFiltrado(FindOptions findOptions, Filter filtros) {
+        return (List<D>) this.repository.buscarFiltrado(findOptions, filtros)
+                .stream()
+                .map(dto -> this.mapper.toDTO(dto))
+                .collect(Collectors.toList());
+    }
+
+    public List<D> buscarFiltrado(Filter filtros) {
+        return (List<D>) this.repository.buscarFiltrado(new FindOptions(), filtros)
                 .stream()
                 .map(dto -> this.mapper.toDTO(dto))
                 .collect(Collectors.toList());

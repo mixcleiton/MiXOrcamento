@@ -6,6 +6,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Index;
 import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexes;
+import dev.morphia.utils.IndexType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +18,7 @@ import org.bson.types.ObjectId;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(value = "empresa")
-@Indexes(@Index(options = @IndexOptions(name = "nome"), fields = @Field("nome")))
+@Indexes(@Index(options = @IndexOptions(name = "nome"), fields = @Field(value = ("nome"), type = IndexType.TEXT)))
 public class Empresa {
 
     @Id

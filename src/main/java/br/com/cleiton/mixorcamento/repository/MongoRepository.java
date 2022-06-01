@@ -3,6 +3,7 @@ package br.com.cleiton.mixorcamento.repository;
 import br.com.cleiton.mixorcamento.util.MongoUtil;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
+import dev.morphia.query.experimental.filters.Filter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bson.Document;
@@ -46,10 +47,11 @@ public abstract class MongoRepository<T> {
         MongoUtil.criarConexao().delete(document);
     }
 
-    public List<T> buscarFiltrado(FindOptions filtros) {
+    public List<T> buscarFiltrado(FindOptions findOptions, Filter filtros) {
         return MongoUtil.criarConexao()
                 .find(genericType)
-                .iterator(filtros)
+                .filter(filtros)
+                .iterator(findOptions)
                 .toList();
     }
 }

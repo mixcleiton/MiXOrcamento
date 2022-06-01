@@ -2,10 +2,21 @@ package br.com.cleiton.mixorcamento.mapper;
 
 import br.com.cleiton.mixorcamento.dto.EmpresaDTO;
 import br.com.cleiton.mixorcamento.modelo.Empresa;
-import org.apache.logging.log4j.util.Strings;
-import org.bson.types.ObjectId;
 
-public class EmpresaMapper implements BaseMapper<Empresa, EmpresaDTO> {
+public class EmpresaMapper extends AbstractBaseMapper<Empresa, EmpresaDTO> {
+
+    private static EmpresaMapper INSTANCIA;
+
+    private EmpresaMapper() {}
+
+    public static EmpresaMapper getInstancia() {
+
+        if (INSTANCIA == null) {
+            INSTANCIA = new EmpresaMapper();
+        }
+
+        return INSTANCIA;
+    }
 
     @Override
     public Empresa toModelo (EmpresaDTO dto) {
@@ -17,17 +28,6 @@ public class EmpresaMapper implements BaseMapper<Empresa, EmpresaDTO> {
                 .endereco(dto.getEndereco())
                 .nome(dto.getNome())
                 .id(this.criarObjectId(dto.getId())).build();
-    }
-
-    private ObjectId criarObjectId(String id) {
-
-        ObjectId novoId = new ObjectId();
-
-        if (!Strings.isEmpty(id)) {
-            novoId = new ObjectId(id);
-        }
-
-        return novoId;
     }
 
     @Override

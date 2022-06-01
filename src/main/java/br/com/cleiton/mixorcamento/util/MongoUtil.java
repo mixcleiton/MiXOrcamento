@@ -11,22 +11,32 @@ import org.apache.logging.log4j.Logger;
 public class MongoUtil {
     private static final Logger logger = LogManager.getLogger(MongoUtil.class);
 
+    private static MongoUtil INSTANCIA;
+
     private MongoUtil() {}
     private static Datastore datastore;
 
-    public static MongoClient carregarConexao() {
+    public static MongoUtil getInstancia() {
+        if (INSTANCIA == null) {
+            INSTANCIA = new MongoUtil();
+        }
+
+        return INSTANCIA;
+    }
+
+    public MongoClient carregarConexao() {
         logger.debug("Carregando conexão do mongo");
 
         return
                 MongoClients.create(PropertiesUtil.getValor(PropertiesEnum.MONGO_URL));
     }
 
-    public static Datastore criarMorphiaDataStore() {
+    public Datastore criarMorphiaDataStore() {
 
         return Morphia.createDatastore(carregarConexao(), PropertiesUtil.getValor(PropertiesEnum.MONGO_DATABASE));
     }
 
-    public static Datastore criarConexao() {
+    public Datastore criarConexao() {
 
         if (datastore == null) {
             datastore = criarMorphiaDataStore();

@@ -2,7 +2,6 @@ package br.com.cleiton.mixorcamento.repository;
 
 import br.com.cleiton.mixorcamento.util.MongoUtil;
 import dev.morphia.query.FindOptions;
-import dev.morphia.query.Query;
 import dev.morphia.query.experimental.filters.Filter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +14,7 @@ import java.util.stream.Collectors;
 
 public abstract class MongoRepository<T> {
     private static final Logger logger = LogManager.getLogger(MongoRepository.class);
+
     private Class<T> genericType;
 
     protected MongoRepository() {
@@ -24,11 +24,11 @@ public abstract class MongoRepository<T> {
 
     public void inserir(T document) {
         logger.info("Chamando o método inserir, document: {}", document);
-        MongoUtil.criarConexao().insert(document);
+        MongoUtil.getInstancia().criarConexao().insert(document);
     }
 
     public void atualizar(T documento) {
-        MongoUtil.criarConexao().merge(documento);
+        MongoUtil.getInstancia().criarConexao().merge(documento);
     }
 
     private Document getId(String id) {
@@ -36,19 +36,19 @@ public abstract class MongoRepository<T> {
     }
 
     public List<T> findAll() {
-        Query<T> itens = MongoUtil
+        return MongoUtil.getInstancia()
                 .criarConexao()
-                .find(genericType);
-
-        return itens.stream().collect(Collectors.toList());
+                .find(genericType)
+                .stream()
+                .collect(Collectors.toList());
     }
 
     public void deletar(T document) {
-        MongoUtil.criarConexao().delete(document);
+        MongoUtil.getInstancia().criarConexao().delete(document);
     }
 
     public List<T> buscarFiltrado(FindOptions findOptions, Filter filtros) {
-        return MongoUtil.criarConexao()
+        return MongoUtil.getInstancia().criarConexao()
                 .find(genericType)
                 .filter(filtros)
                 .iterator(findOptions)

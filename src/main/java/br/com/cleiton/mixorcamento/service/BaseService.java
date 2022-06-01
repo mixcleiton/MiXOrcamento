@@ -15,19 +15,19 @@ public abstract class BaseService<T,
         M extends BaseMapper,
         D extends BaseDTO> {
 
-    protected BaseMapper mapper;
-    protected MongoRepository repository;
+    private MongoRepository mongoRepository;
+    private BaseMapper baseMapper;
 
-    public BaseService(BaseMapper mapper, MongoRepository repository) {
-        this.mapper = mapper;
-        this.repository = repository;
+    public BaseService(MongoRepository repository, BaseMapper mapper) {
+        this.mongoRepository = repository;
+        this.baseMapper = mapper;
     }
 
     public List<D> findAll() {
         return
-                (List<D>) repository.findAll()
+                (List<D>) this.mongoRepository.findAll()
                         .stream()
-                        .map(entidade -> mapper.toDTO(entidade))
+                        .map(entidade -> this.baseMapper.toDTO(entidade))
                         .collect(Collectors.toList());
     }
 
@@ -37,27 +37,27 @@ public abstract class BaseService<T,
         this.validarDTO(dto);
 
         if (editar != null && editar) {
-            this.repository.atualizar(this.mapper.toModelo(dto));
+            this.mongoRepository.atualizar(this.baseMapper.toModelo(dto));
         } else {
-            this.repository.inserir(this.mapper.toModelo(dto));
+            this.mongoRepository.inserir(this.baseMapper.toModelo(dto));
         }
     }
 
     public void apagar(D dto) {
-        this.repository.deletar(this.mapper.toModelo(dto));
+        this.mongoRepository.deletar(this.baseMapper.toModelo(dto));
     }
 
     public List<D> buscarFiltrado(FindOptions findOptions, Filter filtros) {
-        return (List<D>) this.repository.buscarFiltrado(findOptions, filtros)
+        return (List<D>) this.mongoRepository.buscarFiltrado(findOptions, filtros)
                 .stream()
-                .map(dto -> this.mapper.toDTO(dto))
+                .map(dto -> this.baseMapper.toDTO(dto))
                 .collect(Collectors.toList());
     }
 
     public List<D> buscarFiltrado(Filter filtros) {
-        return (List<D>) this.repository.buscarFiltrado(new FindOptions(), filtros)
+        return (List<D>) this.mongoRepository.buscarFiltrado(new FindOptions(), filtros)
                 .stream()
-                .map(dto -> this.mapper.toDTO(dto))
+                .map(dto -> this.baseMapper.toDTO(dto))
                 .collect(Collectors.toList());
     }
 

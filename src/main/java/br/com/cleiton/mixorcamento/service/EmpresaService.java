@@ -16,7 +16,8 @@ public class EmpresaService extends BaseService<Empresa,
         EmpresaDTO> {
 
     public EmpresaService() {
-        super(new EmpresaMapper(), new EmpresaRepository());
+        super(EmpresaRepository.getInstancia(),
+                EmpresaMapper.getInstancia());
     }
 
     @Override

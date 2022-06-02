@@ -11,17 +11,18 @@ import org.apache.logging.log4j.Logger;
 public class MongoUtil {
     private static final Logger logger = LogManager.getLogger(MongoUtil.class);
 
-    private static MongoUtil INSTANCIA;
-
-    private MongoUtil() {}
+    private static MongoUtil instancia;
     private static Datastore datastore;
 
+    private MongoUtil() {}
+
+
     public static MongoUtil getInstancia() {
-        if (INSTANCIA == null) {
-            INSTANCIA = new MongoUtil();
+        if (instancia == null) {
+            instancia = new MongoUtil();
         }
 
-        return INSTANCIA;
+        return instancia;
     }
 
     public MongoClient carregarConexao() {

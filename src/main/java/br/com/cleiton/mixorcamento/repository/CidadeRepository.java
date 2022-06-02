@@ -4,16 +4,16 @@ import br.com.cleiton.mixorcamento.modelo.Cidade;
 
 public class CidadeRepository extends MongoRepository<Cidade> {
 
-    private static CidadeRepository INSTANCIA;
+    private static CidadeRepository instancia;
 
     private CidadeRepository() {}
 
     public static CidadeRepository getInstancia() {
 
-        if (INSTANCIA == null) {
-            INSTANCIA = new CidadeRepository();
+        if (instancia == null) {
+            instancia = new CidadeRepository();
         }
 
-        return INSTANCIA;
+        return instancia;
     }
 }

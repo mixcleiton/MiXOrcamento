@@ -1,6 +1,5 @@
 package br.com.cleiton.mixorcamento.controller;
 
-import br.com.cleiton.mixorcamento.service.CidadeService;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -31,7 +30,7 @@ public class HomeController {
 
     @FXML
     public void initialize() {
-        this.cidadeController = new CidadeController(new CidadeService());
+        this.cidadeController = new CidadeController();
         this.informacaoEmpresaController = new EmpresaController();
 
         this.carregarTelaCadastroCidade();

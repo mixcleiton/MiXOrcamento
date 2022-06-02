@@ -2,10 +2,9 @@ package br.com.cleiton.mixorcamento.controller;
 
 import br.com.cleiton.mixorcamento.MiXOrcamentoApplication;
 import br.com.cleiton.mixorcamento.dto.EmpresaDTO;
+import br.com.cleiton.mixorcamento.modelo.Empresa;
 import br.com.cleiton.mixorcamento.service.EmpresaService;
 import br.com.cleiton.mixorcamento.util.MaskUtil;
-import br.com.cleiton.mixorcamento.util.RegexUtil;
-import dev.morphia.query.experimental.filters.Filter;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,18 +18,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.util.Strings;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-public class EmpresaController extends CrudController<EmpresaDTO>
+public class EmpresaController extends CrudController<Empresa, EmpresaDTO>
         implements IBaseController {
 
-    private static final Logger logger = LogManager.getLogger(EmpresaController.class);
+    private static final Logger LOGGER = LogManager.getLogger(EmpresaController.class);
     public static final int CNPJ_LENGTH = 18;
-    public static final int MAX_LENGTH_100 = 100;
-    public static final int MAX_LENGTH_255 = 255;
     public static final String MENSAGEM_SUCESSO_EMPRESA = "Dados da Empresa salvo com sucesso";
     public static final String MENSAGEM_SUCESSO_APAGAR_EMPRESA = "Dados da Empresa apagados com sucesso";
     public static final String MENSAGEM_PERGUNTA_APAGAR = "Realmente gostaria de apagar os dados da empresa?";
@@ -63,7 +58,7 @@ public class EmpresaController extends CrudController<EmpresaDTO>
     private TableColumn<TableView<EmpresaDTO>, String> empresaColumn;
 
     public EmpresaController() {
-        super(new EmpresaService());
+        super(EmpresaService.getInstancia());
     }
 
     @Override
@@ -76,7 +71,7 @@ public class EmpresaController extends CrudController<EmpresaDTO>
     }
 
     public void inicializar() {
-        this.logger.debug("Inicializando EmpresaController");
+        LOGGER.debug("Inicializando EmpresaController");
         this.carregarCampoCNPJ();
         this.carregarLimiteCampos();
         this.bloquearEditar(Boolean.TRUE);
@@ -171,37 +166,10 @@ public class EmpresaController extends CrudController<EmpresaDTO>
                 .build();
     }
 
-    private String getIdValidado(String texto) {
-        String idValidado = texto;
-
-        if (Strings.isEmpty(texto)) {
-            idValidado = null;
-        }
-
-        return idValidado;
-    }
-
     public void buscarFiltrado() {
-        this.filtro.setOnKeyReleased(e -> {
-            if (this.filtro.getText().length() >= 3) {
-                logger.info("realizando filtro de busca");
-
-                Filter filtro = getFiltroLikePorNome();
-
-                this.carregarTabela(this.service.buscarFiltrado(filtro));
-            } else if (this.filtro.getText().isEmpty()) {
-                this.carregarTabela(this.service.findAll());
-            }
-        });
-    }
-
-    @NotNull
-    private Filter getFiltroLikePorNome() {
-        return RegexUtil.getInstancia()
-                .getFiltroLike(
-                        "nome",
-                        this.filtro.getText()
-                );
+        this.filtro.setOnKeyReleased(
+                e -> realizarBuscaComFiltro("nome", this.filtro.getText())
+        );
     }
 
 }

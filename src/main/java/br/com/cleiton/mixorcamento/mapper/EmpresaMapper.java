@@ -5,22 +5,21 @@ import br.com.cleiton.mixorcamento.modelo.Empresa;
 
 public class EmpresaMapper extends AbstractBaseMapper<Empresa, EmpresaDTO> {
 
-    private static EmpresaMapper INSTANCIA;
+    private static EmpresaMapper instancia;
 
     private EmpresaMapper() {}
 
     public static EmpresaMapper getInstancia() {
 
-        if (INSTANCIA == null) {
-            INSTANCIA = new EmpresaMapper();
+        if (instancia == null) {
+            instancia = new EmpresaMapper();
         }
 
-        return INSTANCIA;
+        return instancia;
     }
 
     @Override
     public Empresa toModelo (EmpresaDTO dto) {
-
         return Empresa.builder()
                 .bairro(dto.getBairro())
                 .cnpj(dto.getCnpj())
@@ -32,7 +31,6 @@ public class EmpresaMapper extends AbstractBaseMapper<Empresa, EmpresaDTO> {
 
     @Override
     public EmpresaDTO toDTO (Empresa modelo) {
-
         return EmpresaDTO.builder()
                 .bairro(modelo.getBairro())
                 .cnpj(modelo.getCnpj())

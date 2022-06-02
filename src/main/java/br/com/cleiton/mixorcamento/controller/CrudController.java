@@ -4,6 +4,7 @@ import br.com.cleiton.mixorcamento.dto.BaseDTO;
 import br.com.cleiton.mixorcamento.exception.ListaCampoObrigatorioException;
 import br.com.cleiton.mixorcamento.service.BaseService;
 import br.com.cleiton.mixorcamento.util.MensagemUtil;
+import dev.morphia.query.experimental.filters.Filter;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableRow;
@@ -11,34 +12,38 @@ import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.util.Strings;
 
 import java.util.List;
 
-public abstract class CrudController<T extends BaseDTO> extends BaseController {
+public abstract class CrudController<T, D extends BaseDTO> extends BaseController {
 
     private static final Logger logger = LogManager.getLogger(CrudController.class);
+    public static final int MAX_LENGTH_100 = 100;
+    public static final int MAX_LENGTH_255 = 255;
+    public static final int SIZE_PARA_INICIAR_BUSCA = 3;
 
     @FXML
-    protected TableView<T> tabela;
+    protected TableView<D> tabela;
 
-    protected BaseService service;
+    protected BaseService<T, D> service;
 
-    public CrudController(BaseService service) {
+    protected CrudController(BaseService<T, D> service) {
         this.service = service;
     }
 
     public void carregarDados() {
-        List<T> itens = this.service.findAll();
+        List<D> itens = this.service.findAll();
         this.carregarTabela(itens);
     }
 
-    public void carregarTabela(List<T> itens) {
+    public void carregarTabela(List<D> itens) {
         this.tabela.setItems(FXCollections.observableList(itens));
     }
 
     protected void carregarEventoTabela() {
         this.tabela.setRowFactory( tv -> {
-            TableRow<T> row = new TableRow<>();
+            TableRow<D> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY
                         && event.getClickCount() == 2) {
@@ -50,10 +55,10 @@ public abstract class CrudController<T extends BaseDTO> extends BaseController {
         });
     }
 
-    public abstract void carregarCamposNoEditar(T item);
-    public abstract String carregarMensagemEditar(T item);
+    public abstract void carregarCamposNoEditar(D item);
+    public abstract String carregarMensagemEditar(D item);
 
-    public void carregarEditar(T item) {
+    public void carregarEditar(D item) {
         String mensagem = this.carregarMensagemEditar(item);
         if (Boolean.TRUE.equals(MensagemUtil.mostrarMensagemPergunta(mensagem))) {
             this.carregarCamposNoEditar(item);
@@ -67,7 +72,7 @@ public abstract class CrudController<T extends BaseDTO> extends BaseController {
         this.bloquearCampos(Boolean.FALSE);
     }
 
-    public abstract T carregarDTO();
+    public abstract D carregarDTO();
     public abstract String getMensagemSucessoSalvar();
     public abstract String getMensagemSucessoApagar();
     public abstract String getMensagemPerguntaApagar();
@@ -96,5 +101,27 @@ public abstract class CrudController<T extends BaseDTO> extends BaseController {
             this.modoEditar = Boolean.FALSE;
             MensagemUtil.mostrarMensagemSucesso(this.getMensagemSucessoApagar());
         }
+    }
+
+    protected void realizarBuscaComFiltro(String field, String filtro) {
+        if (filtro.length() >= SIZE_PARA_INICIAR_BUSCA) {
+
+            Filter filtroLikePorNome =
+                    this.carregarFiltroString(field, filtro);
+
+            this.carregarTabela(this.service.buscarFiltrado(filtroLikePorNome));
+        } else if (filtro.isEmpty()) {
+            this.carregarTabela(this.service.findAll());
+        }
+    }
+
+    protected String getIdValidado(String texto) {
+        String idValidado = texto;
+
+        if (Strings.isEmpty(texto)) {
+            idValidado = null;
+        }
+
+        return idValidado;
     }
 }

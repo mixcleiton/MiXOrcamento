@@ -7,16 +7,16 @@ import java.util.regex.Pattern;
 
 public class RegexUtil {
 
-    private static RegexUtil INSTANCIA;
+    private static RegexUtil instancia;
 
     private RegexUtil() {}
 
     public static RegexUtil getInstancia() {
-        if (INSTANCIA == null) {
-            INSTANCIA = new RegexUtil();
+        if (instancia == null) {
+            instancia = new RegexUtil();
         }
 
-        return INSTANCIA;
+        return instancia;
     }
 
     public Filter getFiltroLike(String field, String valor) {

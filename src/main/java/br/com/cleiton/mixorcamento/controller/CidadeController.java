@@ -3,6 +3,7 @@ package br.com.cleiton.mixorcamento.controller;
 import br.com.cleiton.mixorcamento.MiXOrcamentoApplication;
 import br.com.cleiton.mixorcamento.dto.CidadeDTO;
 import br.com.cleiton.mixorcamento.modelo.Cidade;
+import br.com.cleiton.mixorcamento.modelo.metamodelo.CidadeEnum;
 import br.com.cleiton.mixorcamento.service.CidadeService;
 import br.com.cleiton.mixorcamento.util.MaskUtil;
 import javafx.fxml.FXML;
@@ -78,7 +79,7 @@ public class CidadeController extends CrudController<Cidade, CidadeDTO>
 
     public void buscarFiltrado() {
         this.filtro.setOnKeyReleased(
-                e -> realizarBuscaComFiltro("nome", this.filtro.getText())
+                e -> realizarBuscaComFiltro(CidadeEnum.nome.name(), this.filtro.getText())
         );
     }
 

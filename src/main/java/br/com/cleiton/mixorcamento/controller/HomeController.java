@@ -18,6 +18,7 @@ public class HomeController {
     private static final Logger logger = LogManager.getLogger(HomeController.class);
     private CidadeController cidadeController;
     private EmpresaController informacaoEmpresaController;
+    private UnidadeController unidadeController;
 
     @FXML
     MenuBar menuBar;
@@ -29,24 +30,33 @@ public class HomeController {
     MenuItem menuEmpresa;
 
     @FXML
+    MenuItem menuUnidade;
+
+    @FXML
     public void initialize() {
         this.cidadeController = new CidadeController();
         this.informacaoEmpresaController = new EmpresaController();
+        this.unidadeController = new UnidadeController();
 
-        this.carregarTelaCadastroCidade();
-        this.carregarTelaCadastroEmpresa();
+        this.carregarTelaCidade();
+        this.carregarTelaEmpresa();
+        this.carregarTelaUnidade();
     }
 
     public void expandirMenuBar() {
         menuBar.prefWidthProperty().bind(menuBar.getScene().getWindow().widthProperty());
     }
 
-    public void carregarTelaCadastroCidade() {
+    public void carregarTelaCidade() {
         this.carregarAction(menuCidade, cidadeController);
     }
 
-    public void carregarTelaCadastroEmpresa() {
+    public void carregarTelaEmpresa() {
         this.carregarAction(menuEmpresa, informacaoEmpresaController);
+    }
+
+    public void carregarTelaUnidade() {
+        this.carregarAction(menuUnidade, unidadeController);
     }
 
     private void carregarAction(MenuItem menu, IBaseController controller) {

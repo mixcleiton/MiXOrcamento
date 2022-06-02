@@ -4,17 +4,17 @@ import br.com.cleiton.mixorcamento.modelo.Empresa;
 
 public class EmpresaRepository extends MongoRepository<Empresa> {
 
-    private static EmpresaRepository INSTANCIA;
+    private static EmpresaRepository instancia;
 
     private EmpresaRepository() {}
 
     public static EmpresaRepository getInstancia() {
 
-        if (INSTANCIA == null) {
-            INSTANCIA = new EmpresaRepository();
+        if (instancia == null) {
+            instancia = new EmpresaRepository();
         }
 
-        return INSTANCIA;
+        return instancia;
     }
 
 }

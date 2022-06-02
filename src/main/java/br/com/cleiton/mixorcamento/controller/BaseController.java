@@ -1,6 +1,8 @@
 package br.com.cleiton.mixorcamento.controller;
 
 import br.com.cleiton.mixorcamento.MiXOrcamentoApplication;
+import br.com.cleiton.mixorcamento.util.RegexUtil;
+import dev.morphia.query.experimental.filters.Filter;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -8,7 +10,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bson.types.ObjectId;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -16,8 +18,6 @@ public abstract class BaseController {
 
     private static final Logger logger = LogManager.getLogger(BaseController.class);
     protected Boolean modoEditar = Boolean.FALSE;
-
-    protected ObjectId id;
 
     @FXML
     protected Button btnSalvar;
@@ -92,5 +92,14 @@ public abstract class BaseController {
 
     private void carregarBotaoApagar() {
         this.btnApagar.setOnAction(event -> apagar());
+    }
+
+    @NotNull
+    protected Filter carregarFiltroString(String field, String valor) {
+        return RegexUtil.getInstancia()
+                .getFiltroLike(
+                        field,
+                        valor
+                );
     }
 }

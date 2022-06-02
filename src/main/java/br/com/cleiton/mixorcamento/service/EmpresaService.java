@@ -10,14 +10,21 @@ import br.com.cleiton.mixorcamento.repository.EmpresaRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmpresaService extends BaseService<Empresa,
-        EmpresaRepository,
-        EmpresaMapper,
-        EmpresaDTO> {
+public class EmpresaService extends BaseService<Empresa, EmpresaDTO> {
 
-    public EmpresaService() {
+    public static EmpresaService instancia;
+
+    private EmpresaService() {
         super(EmpresaRepository.getInstancia(),
                 EmpresaMapper.getInstancia());
+    }
+
+    public static EmpresaService getInstancia() {
+        if (instancia == null) {
+            instancia = new EmpresaService();
+        }
+
+        return instancia;
     }
 
     @Override

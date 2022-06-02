@@ -5,17 +5,17 @@ import br.com.cleiton.mixorcamento.modelo.Cidade;
 
 public class CidadeMapper extends AbstractBaseMapper<Cidade, CidadeDTO> {
 
-    private static CidadeMapper INSTANCIA;
+    private static CidadeMapper instancia;
 
     private CidadeMapper(){}
     
     public static CidadeMapper getInstancia() {
 
-        if (INSTANCIA == null) {
-            INSTANCIA = new CidadeMapper();
+        if (instancia == null) {
+            instancia = new CidadeMapper();
         }
 
-        return INSTANCIA;
+        return instancia;
     }
 
     @Override

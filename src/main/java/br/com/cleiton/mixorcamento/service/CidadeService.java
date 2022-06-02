@@ -6,14 +6,21 @@ import br.com.cleiton.mixorcamento.mapper.CidadeMapper;
 import br.com.cleiton.mixorcamento.modelo.Cidade;
 import br.com.cleiton.mixorcamento.repository.CidadeRepository;
 
-public class CidadeService extends  BaseService<Cidade,
-        CidadeRepository,
-        CidadeMapper,
-        CidadeDTO>{
+public class CidadeService extends  BaseService<Cidade, CidadeDTO>{
 
-    public CidadeService() {
+    private static CidadeService instancia;
+
+    private CidadeService() {
         super(CidadeRepository.getInstancia(),
                 CidadeMapper.getInstancia());
+    }
+
+    public static CidadeService getInstancia() {
+        if (instancia == null) {
+            instancia = new CidadeService();
+        }
+
+        return instancia;
     }
 
     @Override

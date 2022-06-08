@@ -1,6 +1,7 @@
 package br.com.cleiton.mixorcamento.service;
 
 import br.com.cleiton.mixorcamento.dto.BaseDTO;
+import br.com.cleiton.mixorcamento.exception.CampoObrigatorioException;
 import br.com.cleiton.mixorcamento.exception.ListaCampoObrigatorioException;
 import br.com.cleiton.mixorcamento.mapper.BaseMapper;
 import br.com.cleiton.mixorcamento.repository.MongoRepository;
@@ -56,6 +57,13 @@ public abstract class BaseService<T, D extends BaseDTO> {
                 .stream()
                 .map(dto -> this.baseMapper.toDTO(dto))
                 .collect(Collectors.toList());
+    }
+
+    protected void validarListaCamposObrigatorios(List<CampoObrigatorioException> camposObrigatorio)
+            throws ListaCampoObrigatorioException {
+        if (!camposObrigatorio.isEmpty()) {
+            throw new ListaCampoObrigatorioException(camposObrigatorio);
+        }
     }
 
 }

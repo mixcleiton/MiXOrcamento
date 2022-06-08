@@ -19,6 +19,7 @@ public class HomeController {
     private CidadeController cidadeController;
     private EmpresaController informacaoEmpresaController;
     private UnidadeController unidadeController;
+    private ItemController itemController;
 
     @FXML
     MenuBar menuBar;
@@ -33,14 +34,19 @@ public class HomeController {
     MenuItem menuUnidade;
 
     @FXML
+    MenuItem menuItem;
+
+    @FXML
     public void initialize() {
         this.cidadeController = new CidadeController();
         this.informacaoEmpresaController = new EmpresaController();
         this.unidadeController = new UnidadeController();
+        this.itemController = new ItemController();
 
         this.carregarTelaCidade();
         this.carregarTelaEmpresa();
         this.carregarTelaUnidade();
+        this.carregarTelaItem();
     }
 
     public void expandirMenuBar() {
@@ -57,6 +63,10 @@ public class HomeController {
 
     public void carregarTelaUnidade() {
         this.carregarAction(menuUnidade, unidadeController);
+    }
+
+    public void carregarTelaItem() {
+        this.carregarAction(menuItem, itemController);
     }
 
     private void carregarAction(MenuItem menu, IBaseController controller) {

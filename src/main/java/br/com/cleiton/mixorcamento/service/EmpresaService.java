@@ -52,9 +52,7 @@ public class EmpresaService extends BaseService<Empresa, EmpresaDTO> {
             camposObrigatorio.add(new CampoObrigatorioException("endereco", "Campo endereço é obrigatório"));
         }
 
-        if (!camposObrigatorio.isEmpty()) {
-            throw new ListaCampoObrigatorioException(camposObrigatorio);
-        }
+        validarListaCamposObrigatorios(camposObrigatorio);
     }
 
 }

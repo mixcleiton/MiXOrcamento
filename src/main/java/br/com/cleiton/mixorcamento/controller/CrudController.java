@@ -19,6 +19,7 @@ import java.util.List;
 public abstract class CrudController<T, D extends BaseDTO> extends BaseController {
 
     private static final Logger logger = LogManager.getLogger(CrudController.class);
+    public static final int MAX_LENGTH_10 = 10;
     public static final int MAX_LENGTH_100 = 100;
     public static final int MAX_LENGTH_255 = 255;
     public static final int SIZE_PARA_INICIAR_BUSCA = 3;

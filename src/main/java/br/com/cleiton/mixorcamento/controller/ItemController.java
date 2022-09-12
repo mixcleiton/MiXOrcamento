@@ -4,9 +4,10 @@ import br.com.cleiton.mixorcamento.MiXOrcamentoApplication;
 import br.com.cleiton.mixorcamento.dto.ItemDTO;
 import br.com.cleiton.mixorcamento.dto.UnidadeDTO;
 import br.com.cleiton.mixorcamento.modelo.Item;
-import br.com.cleiton.mixorcamento.modelo.metamodelo.EmpresaEnum;
+import br.com.cleiton.mixorcamento.modelo.metamodelo.ItemEnum;
 import br.com.cleiton.mixorcamento.service.ItemService;
 import br.com.cleiton.mixorcamento.service.UnidadeService;
+import br.com.cleiton.mixorcamento.util.AuxiliarComboBoxUtil;
 import br.com.cleiton.mixorcamento.util.MaskUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +16,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -24,7 +24,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -37,6 +36,8 @@ public class ItemController extends CrudController<Item, ItemDTO>
     public static final String MENSAGEM_SUCESSO_ITEM = "Dados do Item salvo com sucesso";
     public static final String MENSAGEM_SUCESSO_APAGAR_ITEM = "Dados do Item apagados com sucesso";
     public static final String MENSAGEM_PERGUNTA_APAGAR = "Realmente gostaria apagar os dados do item?";
+
+    private final UnidadeService unidadeService;
 
     @FXML
     private Label id;
@@ -70,6 +71,7 @@ public class ItemController extends CrudController<Item, ItemDTO>
 
     public ItemController() {
         super(ItemService.getInstancia());
+        this.unidadeService = UnidadeService.getInstancia();
     }
 
     @Override
@@ -173,34 +175,13 @@ public class ItemController extends CrudController<Item, ItemDTO>
 
     public void buscarFiltrado() {
         this.filtro.setOnKeyReleased(
-                e -> realizarBuscaComFiltro(EmpresaEnum.nome.name(), this.filtro.getText())
+                e -> realizarBuscaComFiltro(ItemEnum.nome.name(), this.filtro.getText())
         );
     }
 
     private void carregarComboUnidade() {
-
-        List<UnidadeDTO> unidades = UnidadeService.getInstancia().findAll();
-
-        this.unidade.getItems().clear();
-        this.unidade.getItems().addAll(unidades);
-        this.unidade.getSelectionModel().selectFirst();
-        this.unidade.setCellFactory(param -> getListCell());
-        this.unidade.setButtonCell(getListCell());
-    }
-
-    @NotNull
-    private ListCell<UnidadeDTO> getListCell() {
-        return new ListCell<>() {
-            @Override
-            protected void updateItem(UnidadeDTO item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item != null) {
-                    setText(item.getNome().concat(" - ").concat(item.getCodigo()));
-                } else {
-                    setText(null);
-                }
-            }
-        };
+        List<UnidadeDTO> unidades = this.unidadeService.findAll();
+        AuxiliarComboBoxUtil.getInstance().carregarComboComUnidade(unidades, this.unidade);
     }
 
 }

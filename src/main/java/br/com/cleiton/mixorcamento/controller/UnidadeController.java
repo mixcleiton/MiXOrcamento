@@ -3,7 +3,7 @@ package br.com.cleiton.mixorcamento.controller;
 import br.com.cleiton.mixorcamento.MiXOrcamentoApplication;
 import br.com.cleiton.mixorcamento.dto.UnidadeDTO;
 import br.com.cleiton.mixorcamento.modelo.Unidade;
-import br.com.cleiton.mixorcamento.modelo.metamodelo.EmpresaEnum;
+import br.com.cleiton.mixorcamento.modelo.metamodelo.UnidadeEnum;
 import br.com.cleiton.mixorcamento.service.UnidadeService;
 import br.com.cleiton.mixorcamento.util.MaskUtil;
 import javafx.fxml.FXML;
@@ -142,7 +142,7 @@ public class UnidadeController extends CrudController<Unidade, UnidadeDTO>
 
     public void buscarFiltrado() {
         this.filtro.setOnKeyReleased(
-                e -> realizarBuscaComFiltro(EmpresaEnum.nome.name(), this.filtro.getText())
+                e -> realizarBuscaComFiltro(UnidadeEnum.nome.name(), this.filtro.getText())
         );
     }
 

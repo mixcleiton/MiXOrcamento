@@ -5,7 +5,7 @@ import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder
-public class UnidadeDTO extends  BaseDTO {
+public class UnidadeDTO extends BaseDTO {
 
     private String nome;
     private String codigo;

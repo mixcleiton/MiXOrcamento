@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<TitledPane animated="false" collapsible="false" prefHeight="747.0" prefWidth="896.0" text="Cadastro de Vinculo" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.cleiton.mixorcamento.controller.VinculoController">
+
+    <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="670.0" prefWidth="894.0">
+            <children>
+                <HBox layoutX="37.0" layoutY="14.0" prefHeight="120.0" prefWidth="315.0">
+                    <children>
+                        <VBox prefHeight="195.0" prefWidth="115.0" spacing="1.0">
+                            <children>
+                                <Label prefHeight="25.0" prefWidth="101.0" text="Id:" />
+                                <Label prefHeight="25.0" prefWidth="101.0" text="Nome:" />
+                                <Label layoutX="10.0" layoutY="36.0" prefHeight="25.0" prefWidth="101.0" text="Empresa:" />
+                                <Label layoutX="10.0" layoutY="62.0" prefHeight="25.0" prefWidth="101.0" text="Cidade:" />
+                            </children>
+                        </VBox>
+                        <VBox prefHeight="91.0" prefWidth="265.0" spacing="1.0">
+                            <children>
+                                <Label fx:id="id" prefHeight="24.0" prefWidth="252.0" />
+                                <TextField fx:id="nome" prefHeight="25.0" prefWidth="229.0" />
+                                <ComboBox fx:id="empresa" prefHeight="25.0" prefWidth="238.0" />
+                        <ComboBox fx:id="cidade" layoutX="10.0" layoutY="67.0" prefHeight="25.0" prefWidth="238.0" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+                <HBox alignment="TOP_CENTER" layoutX="219.0" layoutY="225.0" prefHeight="57.0" prefWidth="378.0" spacing="10.0">
+                    <children>
+                        <Button fx:id="btnSalvar" mnemonicParsing="false" prefWidth="63.0" text="Salvar" />
+                        <Button fx:id="btnAtualizar" mnemonicParsing="false" prefWidth="63.0" text="Atualizar" />
+                        <Button fx:id="btnApagar" mnemonicParsing="false" prefWidth="63.0" text="Apagar" />
+                        <Button fx:id="btnLimpar" mnemonicParsing="false" prefWidth="63.0" text="limpar" />
+                        <Button fx:id="btnFechar" layoutX="264.0" layoutY="10.0" mnemonicParsing="false" prefWidth="63.0" text="Fechar" />
+                    </children>
+                </HBox>
+                <TableView fx:id="tabela" layoutX="24.0" layoutY="361.0" prefHeight="296.0" prefWidth="846.0">
+                    <columns>
+                        <TableColumn fx:id="idColumn" prefWidth="150.0" text="Id" />
+                        <TableColumn fx:id="nomeColumn" minWidth="6.0" prefWidth="200.0" text="Nome" />
+                        <TableColumn fx:id="empresaColumn" prefWidth="135.0" text="Empresa" />
+                  <TableColumn fx:id="cidadeColumn" prefWidth="135.0" text="Cidade" />
+                  <TableColumn fx:id="itemColumn" prefWidth="135.0" text="Item" />
+                  <TableColumn fx:id="valorColumn" prefWidth="135.0" text="Valor" />
+                    </columns>
+                </TableView>
+                <TextField fx:id="filtro" layoutX="24.0" layoutY="326.0" prefHeight="25.0" prefWidth="305.0" promptText="Digite o Nome do Vinculo..." />
+            <HBox layoutX="374.0" layoutY="14.0" prefHeight="211.0" prefWidth="315.0">
+               <children>
+                  <VBox prefHeight="195.0" prefWidth="115.0" spacing="1.0">
+                     <children>
+                        <Label prefHeight="25.0" prefWidth="101.0" text="Item:" />
+                        <Label prefHeight="25.0" prefWidth="101.0" text="Valor:" />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="91.0" prefWidth="265.0" spacing="1.0">
+                     <children>
+                        <ComboBox fx:id="item" prefHeight="25.0" prefWidth="238.0" />
+                        <TextField fx:id="valor" prefHeight="25.0" prefWidth="229.0" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            </children>
+        </AnchorPane>
+    </content>
+</TitledPane>

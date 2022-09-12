@@ -3,6 +3,7 @@ package br.com.cleiton.mixorcamento.controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
@@ -20,6 +21,7 @@ public class HomeController {
     private EmpresaController informacaoEmpresaController;
     private UnidadeController unidadeController;
     private ItemController itemController;
+    private VinculoController vinculoController;
 
     @FXML
     MenuBar menuBar;
@@ -37,16 +39,21 @@ public class HomeController {
     MenuItem menuItem;
 
     @FXML
+    MenuItem menuVinculo;
+
+    @FXML
     public void initialize() {
         this.cidadeController = new CidadeController();
         this.informacaoEmpresaController = new EmpresaController();
         this.unidadeController = new UnidadeController();
         this.itemController = new ItemController();
+        this.vinculoController = new VinculoController();
 
         this.carregarTelaCidade();
         this.carregarTelaEmpresa();
         this.carregarTelaUnidade();
         this.carregarTelaItem();
+        this.carregarTelaVinculo();
     }
 
     public void expandirMenuBar() {
@@ -67,6 +74,14 @@ public class HomeController {
 
     public void carregarTelaItem() {
         this.carregarAction(menuItem, itemController);
+    }
+
+    public void carregarTelaVinculo() {
+        this.carregarAction(menuVinculo, vinculoController);
+    }
+
+    private void carregarAction(Menu menu, IBaseController controller) {
+        menu.setOnAction(getEventHandler(controller));
     }
 
     private void carregarAction(MenuItem menu, IBaseController controller) {

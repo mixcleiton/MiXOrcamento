@@ -18,11 +18,7 @@
                     <MenuItem fx:id="menuCidade" mnemonicParsing="false" text="Cidade" />
                         <MenuItem fx:id="menuUnidade" mnemonicParsing="false" text="Unidade" />
                         <MenuItem fx:id="menuItem" mnemonicParsing="false" text="Item" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
+                        <MenuItem fx:id="menuVinculo" mnemonicParsing="false" text="Vinculo" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">

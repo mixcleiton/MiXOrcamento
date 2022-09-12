@@ -2,7 +2,7 @@ package br.com.cleiton.mixorcamento.repository;
 
 import br.com.cleiton.mixorcamento.modelo.Unidade;
 
-public class UnidadeRepository extends  MongoRepository<Unidade> {
+public class UnidadeRepository extends MongoRepository<Unidade> {
 
     private static UnidadeRepository instancia;
 
